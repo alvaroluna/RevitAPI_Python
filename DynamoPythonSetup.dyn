@@ -1,0 +1,309 @@
+{
+  "Uuid": "d57defa7-dae5-46f1-97a8-c801648401ff",
+  "IsCustomNode": false,
+  "Description": null,
+  "Name": "DynamoPythonSetup",
+  "ElementResolver": {
+    "ResolutionMap": {}
+  },
+  "Inputs": [],
+  "Outputs": [],
+  "Nodes": [
+    {
+      "ConcreteType": "Dynamo.Graph.Nodes.CodeBlockNodeModel, DynamoCore",
+      "NodeType": "CodeBlockNode",
+      "Code": "OUT[0];\nOUT[1];",
+      "Id": "468f59e93bf54c14b5dbaa6cb6e34b1b",
+      "Inputs": [
+        {
+          "Id": "60ac147eac3444919df8405d0c049a5e",
+          "Name": "OUT",
+          "Description": "OUT",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "efe9d58942fe4a51aeabdb55a26c3064",
+          "Name": "",
+          "Description": "Value of expression at line 1",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        },
+        {
+          "Id": "8f03cda9aef046e78dddc59018a6e3b6",
+          "Name": "",
+          "Description": "Value of expression at line 2",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Allows for DesignScript code to be authored directly"
+    },
+    {
+      "ConcreteType": "PythonNodeModels.PythonNode, PythonNodeModels",
+      "NodeType": "PythonScriptNode",
+      "Code": "\"\"\"\r\nNotes: yes, this looks scary but it makes development in dynamo easier!\r\n\"\"\"\r\n\r\nimport traceback\r\n\r\n# print list\r\nprintList = []\r\n\r\ntry:\r\n\t# standard modules\r\n\timport clr\r\n\timport math\r\n\timport os\r\n\timport re\r\n\timport sys\t\r\n\timport System\r\n\t\r\n\t# search for python files in this repo's asset/py folder\r\n\tsys.path.append(IN[0])\r\n\t\r\n\t# RevitServices for Dynamo\r\n\tclr.AddReference(\"RevitServices\")\r\n\timport RevitServices\r\n\tfrom RevitServices.Persistence import DocumentManager\r\n\tfrom RevitServices.Transactions import TransactionManager\r\n\t\r\n\t# Revit/Dynamo Nodes\r\n\tclr.AddReference(\"RevitNodes\")\r\n\timport Revit\r\n\tclr.ImportExtensions(Revit.Elements)\r\n\tclr.ImportExtensions(Revit.GeometryConversion)\r\n\t\r\n\t# Dynamo Geometry nodes\r\n\tclr.AddReference(\"ProtoGeometry\")\r\n\tfrom Autodesk.DesignScript.Geometry import *\r\n\t\r\n\t# Revit API\r\n\tclr.AddReference('RevitAPI')\r\n\tclr.AddReference('RevitAPIUI')\r\n\timport Autodesk # noqa E402\r\n\tfrom Autodesk.Revit.UI import * # noqa E402\r\n\tfrom Autodesk.Revit import DB # noqa E402\r\n\timport Autodesk.Revit.UI.Selection # noqa E402\r\n\t\r\n\t# dynamo document management\r\n\tdoc = DocumentManager.Instance.CurrentDBDocument\r\n\tuiapp = DocumentManager.Instance.CurrentUIApplication\r\n\tapp = uiapp.Application\r\n\tuidoc = DocumentManager.Instance.CurrentUIApplication.ActiveUIDocument\r\n\t\r\n\tuser = str(System.Environment.UserName)\r\n\ttol = 0.001\r\n\t\r\n\t# transaction variables\r\n\ttStart = TransactionManager.Instance.EnsureInTransaction(doc)\r\n\ttEnd = TransactionManager.Instance.TransactionTaskDone()\r\n\r\n\r\n\t#===================================================================\r\n\t# inputs\r\n\tnodeInput = IN[0]\r\n\t\r\n\t\r\n\t# code goes here\r\n\tprintList.append(\"Hello\")\r\n\tprintList.append(nodeInpt)\r\n\t\r\n\t\r\n\t#===================================================================\r\n\t# outputs | OUT[-1] should always be print statements\r\n\tOUT = [\"code output\", printList]\r\n\t#===================================================================\r\n\t\r\n\r\nexcept:\r\n\t# print traceback in order to debug file | OUT[-1] should always be print statements\r\n\tOUT = [\"Code Failed: {0}\".format(traceback.format_exc()), printList]\r\n",
+      "VariableInputPorts": true,
+      "Id": "e7356c11bccb4fdcb8c518d1ac7f183d",
+      "Inputs": [
+        {
+          "Id": "5d3477400a5744218c286e1d2832aa30",
+          "Name": "IN[0]",
+          "Description": "Input #0",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        },
+        {
+          "Id": "ca5c6cd2b25740aca80bd7afa4dc6ad0",
+          "Name": "IN[1]",
+          "Description": "Input #1",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "93d1561b8e4d4429a288bfa16c97cd80",
+          "Name": "OUT",
+          "Description": "Result of the python script",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Runs an embedded IronPython script."
+    },
+    {
+      "ConcreteType": "CoreNodeModels.Watch, CoreNodeModels",
+      "NodeType": "ExtensionNode",
+      "Id": "de82fc3bf8bb4df4a460140519bbf3c1",
+      "Inputs": [
+        {
+          "Id": "536aa3c966944e888f40d96bdb8bd4f4",
+          "Name": "",
+          "Description": "Node to evaluate.",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "ae68c9a9bd0e4063b5021f53f0b5b7d5",
+          "Name": "",
+          "Description": "Watch contents.",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Visualize the output of node."
+    },
+    {
+      "ConcreteType": "Dynamo.Graph.Nodes.ZeroTouch.DSFunction, DynamoCore",
+      "NodeType": "FunctionNode",
+      "FunctionSignature": "Autodesk.DesignScript.Geometry.Vector.ZAxis",
+      "Id": "ff865ac73e1546fb929fbc89290e658a",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "6810814025f8471c92c2aad54c0f7792",
+          "Name": "Vector",
+          "Description": "Vector",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Auto",
+      "Description": "Get the canonical Z axis Vector (0,0,1)\n\nVector.ZAxis ( ): Vector"
+    },
+    {
+      "ConcreteType": "CoreNodeModels.Watch, CoreNodeModels",
+      "NodeType": "ExtensionNode",
+      "Id": "09181b0ae4e44a6f9a4a0556843760dc",
+      "Inputs": [
+        {
+          "Id": "c91c2632eada491f9950332ae7575a91",
+          "Name": "",
+          "Description": "Node to evaluate.",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "cbb276be8bbe4afaad59c6f965b2b90d",
+          "Name": "",
+          "Description": "Watch contents.",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Visualize the output of node."
+    },
+    {
+      "ConcreteType": "CoreNodeModels.Input.Directory, CoreNodeModels",
+      "HintPath": "C:\\Users\\lunaa\\OneDrive - autodesk\\REFERENCE\\RevitAPI_python\\No file selected",
+      "InputValue": "No file selected.",
+      "NodeType": "ExtensionNode",
+      "Id": "7321424d8b3e40fdb0719b749db6ea29",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "562defaa9ebd444aa17ec4ad3a787c88",
+          "Name": "",
+          "Description": "Directory",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Allows you to select a directory on the system to get its path"
+    }
+  ],
+  "Connectors": [
+    {
+      "Start": "efe9d58942fe4a51aeabdb55a26c3064",
+      "End": "536aa3c966944e888f40d96bdb8bd4f4",
+      "Id": "86f9251c7405438c99a1eee2f0838527"
+    },
+    {
+      "Start": "8f03cda9aef046e78dddc59018a6e3b6",
+      "End": "c91c2632eada491f9950332ae7575a91",
+      "Id": "30897b17ef7341ee84f9847ea8b5ac58"
+    },
+    {
+      "Start": "93d1561b8e4d4429a288bfa16c97cd80",
+      "End": "60ac147eac3444919df8405d0c049a5e",
+      "Id": "d4c2131eb8364515a19091f7a8e708ad"
+    },
+    {
+      "Start": "6810814025f8471c92c2aad54c0f7792",
+      "End": "ca5c6cd2b25740aca80bd7afa4dc6ad0",
+      "Id": "a38fef18453d4fc6940b9e936de40665"
+    },
+    {
+      "Start": "562defaa9ebd444aa17ec4ad3a787c88",
+      "End": "5d3477400a5744218c286e1d2832aa30",
+      "Id": "3d6b883f5ebc42dc9aa5ff0c485deef0"
+    }
+  ],
+  "Dependencies": [],
+  "NodeLibraryDependencies": [],
+  "Bindings": [],
+  "View": {
+    "Dynamo": {
+      "ScaleFactor": 1.0,
+      "HasRunWithoutCrash": true,
+      "IsVisibleInDynamoLibrary": true,
+      "Version": "2.5.0.7460",
+      "RunType": "Automatic",
+      "RunPeriod": "1000"
+    },
+    "Camera": {
+      "Name": "Background Preview",
+      "EyeX": -17.0,
+      "EyeY": 24.0,
+      "EyeZ": 50.0,
+      "LookX": 12.0,
+      "LookY": -13.0,
+      "LookZ": -58.0,
+      "UpX": 0.0,
+      "UpY": 1.0,
+      "UpZ": 0.0
+    },
+    "NodeViews": [
+      {
+        "ShowGeometry": true,
+        "Name": "Code Block",
+        "Id": "468f59e93bf54c14b5dbaa6cb6e34b1b",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 401.10003194894307,
+        "Y": 202.95719762675958
+      },
+      {
+        "ShowGeometry": true,
+        "Name": "Python Script",
+        "Id": "e7356c11bccb4fdcb8c518d1ac7f183d",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 228.5,
+        "Y": 198.5
+      },
+      {
+        "ShowGeometry": true,
+        "Name": "Watch",
+        "Id": "de82fc3bf8bb4df4a460140519bbf3c1",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 614.5,
+        "Y": 130.5
+      },
+      {
+        "ShowGeometry": true,
+        "Name": "Vector.ZAxis",
+        "Id": "ff865ac73e1546fb929fbc89290e658a",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 110.87175262499414,
+        "Y": 256.0721360123112
+      },
+      {
+        "ShowGeometry": true,
+        "Name": "Print Statements",
+        "Id": "09181b0ae4e44a6f9a4a0556843760dc",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 612.609989019527,
+        "Y": 318.741778901952
+      },
+      {
+        "ShowGeometry": true,
+        "Name": "Directory Path",
+        "Id": "7321424d8b3e40fdb0719b749db6ea29",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 51.030331348221267,
+        "Y": 85.203167642031588
+      }
+    ],
+    "Annotations": [],
+    "X": 353.13807903511776,
+    "Y": 99.6569374870108,
+    "Zoom": 2.080710428125
+  }
+}
